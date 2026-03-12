@@ -1,0 +1,30 @@
+<service>
+  <id>FIXEngine</id>
+  <name>Company FIX Engine</name>
+  <description>FIX Protocol Engine - Company (FIX 4.2 Initiator)</description>
+
+  <executable>%BASE%\FIXEngine.exe</executable>
+  <arguments>--service --config "%BASE%\config\quickfix.cfg"</arguments>
+
+  <workingdirectory>%BASE%</workingdirectory>
+  <startmode>Automatic</startmode>
+
+  <!-- Auto-restart on failure -->
+  <onfailure action="restart" delay="10 sec"/>
+  <onfailure action="restart" delay="20 sec"/>
+  <onfailure action="restart" delay="60 sec"/>
+  <resetfailure>1 hour</resetfailure>
+
+  <!-- Logging (stdout/stderr) -->
+  <logpath>%BASE%\logs</logpath>
+  <log mode="roll-by-size">
+    <sizeThreshold>10240</sizeThreshold>
+    <keepFiles>8</keepFiles>
+  </log>
+
+  <!-- Graceful shutdown -->
+  <stoptimeout>30 sec</stoptimeout>
+  <stopparentprocessfirst>true</stopparentprocessfirst>
+
+  <priority>Normal</priority>
+</service>
