@@ -1,109 +1,109 @@
 # FIX Engine - Demo
 
-A continuación, la documentación estructurada y estilizada para el motor FIX usando QuickFIX. He organizado la información en tablas y bloques de código para facilitar su lectura y uso por parte del equipo técnico.
+Below is the structured and stylized documentation for the FIX engine using QuickFIX. I have organized the information into tables and code blocks to facilitate reading and use by the technical team.
 
 ---
 
-## Especificaciones Técnicas
+## Technical Specifications
 
-### Stack Base
+### Base Stack
 
-| Tecnología | Versión / Detalle |
+| Technology | Version / Detail |
 | --- | --- |
-| **Motor FIX** | QuickFIX/J 3.0.0 |
-| **Protocolo** | FIX 4.2 |
-| **Lenguaje** | Java 21 (compilado con JDK 22) |
-| **Gestor de Dependencias** | Maven |
-| **Sistema Operativo Destino** | Windows 11 |
+| **FIX Engine** | QuickFIX/J 3.0.0 |
+| **Protocol** | FIX 4.2 |
+| **Language** | Java 21 (compiled with JDK 22) |
+| **Dependency Manager** | Maven |
+| **Target Operating System** | Windows 11 |
 
-### Mensajes FIX 4.2 Soportados
+### Supported FIX 4.2 Messages
 
-| Categoría | Mensaje | Tipo (MsgType) |
+| Category | Message | Type (MsgType) |
 | --- | --- | --- |
-| **Órdenes** | NewOrderSingle | `D` |
-|  | OrderCancelRequest | `F` |
-|  | OrderCancelReplaceRequest | `G` |
-|  | OrderStatusRequest | `H` |
+| **Orders** | NewOrderSingle | `D` |
+|   | OrderCancelRequest | `F` |
+|   | OrderCancelReplaceRequest | `G` |
+|   | OrderStatusRequest | `H` |
 | **Execution Reports** | ExecutionReport | `8` |
-|  | OrderCancelReject | `9` |
+|   | OrderCancelReject | `9` |
 | **Market Data** | MarketDataRequest | `V` |
-|  | Snapshot | `W` |
-|  | Incremental | `X` |
-|  | Reject | `Y` |
+|   | Snapshot | `W` |
+|   | Incremental | `X` |
+|   | Reject | `Y` |
 | **Securities** | SecurityDefinitionRequest | `c` |
-|  | SecurityDefinition | `d` |
+|   | SecurityDefinition | `d` |
 
 ---
 
-## Estructura del Entorno Productivo
+## Production Environment Structure
 
-El empaquetado final genera una estructura autocontenida de aproximadamente **167 MB** en el directorio `dist/FIXEngine/`.
+The final packaging generates a self-contained structure of approximately **167 MB** in the `dist/FIXEngine/` directory.
 
 ```text
 FIXEngine/
-├── FIXEngine.exe              # Launcher nativo (jpackage, con JRE embebido)
-├── FIXEngineService.exe       # WinSW v2.12.0 (wrapper servicio Windows)
-├── FIXEngineService.xml       # Configuración del servicio
-├── install-service.bat        # Instalar como servicio (Requiere Admin)
-├── uninstall-service.bat      # Desinstalar servicio (Requiere Admin)
-├── app/                       # JAR de la aplicación
-├── runtime/                   # JRE embebido (no requiere Java en el SO)
-├── config/                    # quickfix.cfg + logback.xml (editables)
-├── logs/                      # Logs del servicio
+├── FIXEngine.exe              # Native launcher (jpackage, with embedded JRE)
+├── FIXEngineService.exe       # WinSW v2.12.0 (Windows service wrapper)
+├── FIXEngineService.xml       # Service configuration
+├── install-service.bat        # Install as service (Requires Admin)
+├── uninstall-service.bat      # Uninstall service (Requires Admin)
+├── app/                       # Application JAR
+├── runtime/                   # Embedded JRE (does not require Java on the OS)
+├── config/                    # quickfix.cfg + logback.xml (editable)
+├── logs/                      # Service logs
 ├── store/                     # FIX session store
-└── data/                      # Archivos de datos adicionales
+└── data/                      # Additional data files
+
 
 ```
 
 ---
 
-## Guía de Despliegue
+## Deployment Guide
 
-Sigue estos pasos para instalar el motor en el equipo destino:
+Follow these steps to install the engine on the target machine:
 
-1. **Copiar los binarios:** Transfiere la carpeta `dist/FIXEngine/` al directorio de instalación en el servidor destino (por ejemplo, `C:\Services\FIXEngine\`).
-2. **Configurar el entorno:** Edita el archivo `config/quickfix.cfg` con los valores reales del entorno (productivo o pruebas). Asegúrate de actualizar los siguientes parámetros:
+1. **Copy the binaries:** Transfer the `dist/FIXEngine/` folder to the installation directory on the target server (for example, `C:\Services\FIXEngine\`).
+2. **Configure the environment:** Edit the `config/quickfix.cfg` file with the actual values of the environment (production or testing). Make sure to update the following parameters:
+
 * `SenderCompID`
 * `TargetCompID`
 * `SocketConnectHost`
 * `SocketConnectPort`
 
-
-3. **Instalar y arrancar:** Ejecuta el archivo `install-service.bat` como **Administrador**. Esto registrará el servicio en Windows y lo iniciará automáticamente.
+3. **Install and start:** Run the `install-service.bat` file as an **Administrator**. This will register the service in Windows and start it automatically.
 
 ---
 
-## Administración y Mantenimiento
+## Administration and Maintenance
 
-### Comandos del Servicio
+### Service Commands
 
-Todos los comandos deben ejecutarse desde una consola con privilegios de **Administrador**.
+All commands must be executed from a console with **Administrator** privileges.
 
-| Acción | Comando |
+| Action | Command |
 | --- | --- |
-| **Registrar servicio** | `FIXEngineService.exe install` |
-| **Iniciar servicio** | `FIXEngineService.exe start` |
-| **Detener servicio** | `FIXEngineService.exe stop` |
-| **Ver estado** | `FIXEngineService.exe status` |
-| **Eliminar servicio** | `FIXEngineService.exe uninstall` |
-| **Verificar vía OS** | `sc query FIXEngine` |
+| **Register service** | `FIXEngineService.exe install` |
+| **Start service** | `FIXEngineService.exe start` |
+| **Stop service** | `FIXEngineService.exe stop` |
+| **View status** | `FIXEngineService.exe status` |
+| **Remove service** | `FIXEngineService.exe uninstall` |
+| **Verify via OS** | `sc query FIXEngine` |
 
-### Características de Operación
+### Operational Characteristics
 
-* **Arranque desatendido:** Inicia automáticamente con Windows (`startmode=Automatic`).
-* **Alta disponibilidad:** Reinicio automático ante fallos del proceso (3 reintentos programados a los 10s, 20s y 60s).
-* **Gestión de Logs:** Rotación automática por tamaño (Límite de 10MB, con retención de 8 archivos históricos).
-* **Cierre seguro:** Shutdown tipo *graceful* con un timeout máximo de 30 segundos.
-* **Independencia:** No requiere instalación de Java a nivel de sistema gracias al JRE embebido en la carpeta `runtime/`.
+* **Unattended startup:** Starts automatically with Windows (`startmode=Automatic`).
+* **High availability:** Automatic restart upon process failure (3 scheduled retries at 10s, 20s, and 60s).
+* **Log Management:** Automatic size-based rotation (10MB limit, with retention of 8 historical files).
+* **Safe shutdown:** Graceful shutdown with a maximum timeout of 30 seconds.
+* **Independence:** Does not require a system-level Java installation thanks to the embedded JRE in the `runtime/` folder.
 
-### Re-construcción (Build)
+### Rebuilding (Build)
 
-Para volver a generar el empaquetado distribuible desde el código fuente, ejecuta:
+To regenerate the distributable package from the source code, run:
 
 ```bat
 build-dist.bat
 
+
 ```
-
 ---
-
